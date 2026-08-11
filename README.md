@@ -27,8 +27,6 @@ references/                               # wytyczne szczegółowe
   section-rewriting-case-study.md
   wikidata-description.md
   workflow.md
-assets/
-  wiki-checklist.txt
 ```
 
 ## Zasady kluczowe

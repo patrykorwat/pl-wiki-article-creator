@@ -762,4 +762,3 @@ Skill zawiera dodatkowe pliki referencyjne:
 - `references/section-rewriting-case-study.md` — case study: przepisywanie sekcji POLSA (lipiec 2026) — technika konwersji bullet pointów na prozę, pułapka usuwania przypisów, NPOV dla instytucji
 - `references/wikidata-description.md` — jak ustawić polski opis w Wikidanych dla nowego artykułu
 - `references/przedsiebiorstwo-infobox.md` — pola i pułapki szablonu {{Przedsiębiorstwo infobox}} (dozwolone/nieistniejące pola, wzorzec danych finansowych, szablony giełdowe, commons w infoboxie)
-- `assets/wiki-checklist.txt` — checklista w formacie tekstowym (do wklejenia)
