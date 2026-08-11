@@ -580,7 +580,8 @@ Przy opisywaniu kontrowersji, sporów i zarzutów stosuj dodatkowe reguły:
 - [ ] `{{link-interwiki}}` używa `Q=` (NIE `en=`), nie jest na początku artykułu, a QID zweryfikowany, że wskazuje właściwą encję (otwarto QXXXXXXXX w Wikidanych)
 - [ ] Kategorie — każda `[[Kategoria:...]]` istnieje na pl.wiki (sprawdzono przez pl.wikipedia.org/wiki/Kategoria:...)
 - [ ] Sprawdzono HTTP 200 dla wszystkich linków wewnętrznych (`curl -sL -o /dev/null -w '%{http_code}' 'https://pl.wikipedia.org/wiki/Haslo'`)
-- [ ] Opis w Wikidanych ustawiony (lub dodany komentarz <!-- Wikidata: Q... --> w artykule)
+- [ ] Opis w Wikidanych ustawiony
+- [ ] Brak komentarzy HTML (`<!-- ... -->`) w treści artykułu — plik zawiera wyłącznie wikikod
 - [ ] Styl neutralny i encyklopedyczny
 - [ ] Nie cytowano źródeł bez dostępu do treści
 - [ ] Myślnik w leadzie – tylko w definicji `'''Termin''' – definicja`
@@ -708,6 +709,7 @@ Podczas tłumaczenia/adaptacji artykułów z obcojęzycznych Wikipedii (niemieck
 39. **Dublowanie treści między sekcjami „Historia" i „Zadania i działania"** – te sekcje mają różne funkcje: Historia = chronologia (kiedy coś się wydarzyło), Zadania = funkcje (co agencja/instytucja robi). Nie powtarzaj tych samych wydarzeń w obu. Jeśli to samo wydarzenie pojawia się w obu sekcjach, usuń je z jednej.
 
 40. **Szczegółowe wyliczanie zarzutów jednej strony w kontrowersjach** – nawet w parafrazie, samo wyliczanie szczegółów („brak kompetencji, zaniechania, naruszanie praw, pytania bez odpowiedzi") tworzy wrażenie stronniczości, zwłaszcza gdy druga strona nie przedstawiła stanowiska. Zredukuj do jednego neutralnego sformułowania: „zarzucił błędy w zarządzaniu". Szczegóły należą do osobnego artykułu.
+41. **Komentarze HTML w treści artykułu/pliku** – nie wstawiaj `<!-- ... -->` (oznaczenia „do uzupełnienia", „źródło do dodania", „sekcja analityczna") do pliku z artykułem. To śmieci edytorskie, nie treść encyklopedyczna. Jeśli tezy nie da się podeprzeć źródłem, usuń ją zamiast oznaczać komentarzem; notatki robocze trzymaj poza plikiem artykułu.
 
 ## Propozycje do rubryki „Czy wiesz"
 
@@ -747,6 +749,7 @@ Gdy artykuł jest zgłoszony do „Czy wiesz" na stronie głównej, możesz zost
 5. **Zweryfikuj źródło zanim je zaproponujesz** — nigdy nie sugeruj przypisów na podstawie domysłów o treści.
 6. Nie wymyślaj szablonów — testuj w podglądzie przed publikacją.
 7. Krótsze hasło z 5 czystymi, niezależnymi źródłami bije dłuższe rozdęte słabymi przypisami.
+8. **Nie dodawaj komentarzy HTML (`<!-- ... -->`) do treści artykułu/pliku z artykułem.** Komentarze edytorskie („do uzupełnienia", „teza wymaga źródła", „sekcja analityczna") nie są treścią encyklopedyczną — plik z artykułem ma zawierać WYŁĄCZNIE wikikod artykułu. Jeśli nie masz źródła dla tezy, pomiń ją; jeśli masz notatki robocze, trzymaj je poza plikiem artykułu.
 
 ## Materiały pomocnicze
 
