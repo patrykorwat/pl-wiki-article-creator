@@ -1,6 +1,6 @@
 # pl-wiki-article-creator
 
-Skill dla Hermes Agent do tworzenia, edytowania i formatowania artykułów na **polskiej Wikipedii (pl.wiki)**.
+Skill do Hermesa do tworzenia, edytowania i formatowania artykułów na polskiej Wikipedii (pl.wiki).
 
 ## Co robi
 
