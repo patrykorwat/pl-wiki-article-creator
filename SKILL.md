@@ -760,6 +760,49 @@ Gdy artykuł jest zgłoszony do „Czy wiesz" na stronie głównej, możesz zost
 7. Krótsze hasło z 5 czystymi, niezależnymi źródłami bije dłuższe rozdęte słabymi przypisami.
 8. **Nie dodawaj komentarzy HTML (`<!-- ... -->`) do treści artykułu/pliku z artykułem.** Komentarze edytorskie („do uzupełnienia", „teza wymaga źródła", „sekcja analityczna") nie są treścią encyklopedyczną — plik z artykułem ma zawierać WYŁĄCZNIE wikikod artykułu. Jeśli nie masz źródła dla tezy, pomiń ją; jeśli masz notatki robocze, trzymaj je poza plikiem artykułu.
 
+## Dodatkowe zasady i workflow (scalone z wikipedia-pl-editing)
+
+Sekcja scalona z osobnego skilla `wikipedia-pl-editing` (obecnie wchłoniętego). Zawiera wyłącznie zasady NIEpowielone wyżej; pozostałe (źródła higiena, NPOV, `{{cytuj}}`, link-interwiki QID, kategorie, edycja przez plik, render-check) są już w głównych sekcjach tego skilla.
+
+### Czytelność BODY, nie tylko HTTP 200
+HTTP 200 nie wystarcza do zacytowania – potwierdź, że BODY jest czytelne poza przeglądarką. Reuters zwraca 401 na curl, NYT 403, consilium.europa.eu ma JS-check (body nieczytelne), NBC renderuje artykuł w JS. Preferuj źródła ze statycznym czytelnym HTML (np. NPR). Gdy body nieczytelne: opieraj się tylko na tezie potwierdzonej TYTUŁEM strony albo znajdź ten sam oficjalny tekst w czytelnej lokalizacji (PDF EEAS/OSCE, archiwum).
+
+### QID-fallback dla link-interwiki
+Gdy QID-u nie da się zweryfikować (wyszukiwanie daje niespokrewnione encje): **zweryfikowany > odgadnięty > zwykły tekst**. Po 2 pudłach dla danej encji użyj ZWYKŁEGO TEKSTU zamiast zgadywać kolejny QID – zły link-interwiki jest gorszy niż brak linku.
+
+### Research bieżących wydarzeń / incydentów militarnych
+- Szukaj przez DuckDuckGo Lite (omija CAPTCHA Google):
+  `curl -s -L "https://lite.duckduckgo.com/lite/" -H "User-Agent: Mozilla/5.0" -H "Content-Type: application/x-www-form-urlencoded" -d "q=...&kl=pl-pl"`
+- Tier-y źródeł: Tier 1 Defence24/specjalistyczne; Tier 2 TVN24/Onet/Wyborcza/Polsat; Tier 3 mniejsze (tylko cytaty urzędników); unikaj blogów/telegram/YouTube/social.
+- Krzyżuj kluczowe fakty w min. 2 niezależnych źródłach.
+- Precyzja faktograficzna: „próbowały zniszczyć/pzechwycić” ≠ „prowadziły/eskortowały”. Nie mylić.
+- Hasła o wydarzeniach rosyjskich: dodawaj reakcję krajową + międzynarodową, W TYM Polskę (oświadczenie MSZ na gov.pl) i UE/EEAS.
+
+### Organizacje / fundacje (NPOV + sourcing)
+- Sourcing: statut organizacji (źródło pierwotne) + niezależny artykuł + źródło pierwotne; patrz `references/ngo-sourcing-strategy.md`.
+- Usuwaj sekcje plotkarskie („afera obyczajowa”), „strategie manipulacji”, niepotwierdzone zarzuty o związki z Rosją; pejoratywne etykiety → język z atrybucją.
+- Krytykę atrybucj („według krytyków”), nie z głosu encyklopedii.
+- Nie zakładaj, że org reprezentuje Kościół, bez potwierdzenia przez sam kościół.
+- YouTube jako źródło – usuwać (niewiarygodne).
+
+### Komunikacja z edytorami i edit summaries
+- Edit summary: krótki (<80 zn.), opisuje CO zrobiono (nie dlaczego); PL po polsku, EN po angielsku (przykład: „poprawki NPOV i źródeł w leadzie; usunięto tezy bez pokrycia w źródłach”).
+- Odpowiedzi w dyskusji: jeden płynny akapit, bez bulletów/myślników/list, bez liczb/statystyk; odwołuj się do konkretnych diffów i zmian; bez psychoanalizy i ataków.
+
+### Odkrywanie źródeł akademickich
+- CrossRef: `api.crossref.org/works?query=...&rows=10`; OpenAlex: `api.openalex.org/works/doi:...?select=title,abstract_inverted_index`.
+- Tylko peer-reviewed (monografie, czasopisma z IF) do definicji/klasyfikacji. NIE dziennikarze do definicji, NIE prace magisterskie, NIE portale typu wiki.
+
+### Szablony porządkowe artykułu
+Nie dodawaj {{Dopracować|pov}}, {{fakt}}, {{przez kogo}} itp. bez wyraźnej prośby użytkownika; jeśli szablon już jest – usuń go, gdy naprawisz problem (inaczej wygląda to jak niedokończona praca).
+
+### URL hygiene
+- Polskie znaki (ł, ś, ć, ż, ą, ę, ó, ń) w URL – koduj (procent) albo zamień na ASCII; sprawdzaj, czy URL z polskimi znakami resolve'uje się.
+- Backslash-escaped cudzysłowy (`\\\"`) w wikitekście = sygnał copy-paste z API; zamień na polskie „...”.
+
+### Edycja dużych plików (>50K)
+`patch` może nie trafić przy `old_string` > ~5K znaków. Użyj skryptu `.py` z `open().read()`, `content.replace(old, new)`, `open().write()`; po zapisie od razu przeczytaj plik i zweryfikuj zmianę (write-then-verify); przy niepewnym dopasowaniu `re.search(..., DOTALL)`.
+
 ## Materiały pomocnicze
 
 Skill zawiera dodatkowe pliki referencyjne:
@@ -774,3 +817,10 @@ Skill zawiera dodatkowe pliki referencyjne:
 - `references/section-rewriting-case-study.md` — case study: przepisywanie sekcji POLSA (lipiec 2026) — technika konwersji bullet pointów na prozę, pułapka usuwania przypisów, NPOV dla instytucji
 - `references/wikidata-description.md` — jak ustawić polski opis w Wikidanych dla nowego artykułu
 - `references/przedsiebiorstwo-infobox.md` — pola i pułapki szablonu {{Przedsiębiorstwo infobox}} (dozwolone/nieistniejące pola, wzorzec danych finansowych, szablony giełdowe, commons w infoboxie)
+- `references/ngo-sourcing-strategy.md` — sourcing dla NGO (statut + media + źródło pierwotne)
+- `references/npov-organization-cleanup.md` — NPOV dla organizacji (sekcje plotkarskie, atrybucja krytyki)
+- `references/current-events-source-examples.md` — przykłady źródeł do bieżących wydarzeń/incydentów
+- `references/election-articles-pl-wiki.md` — pułapki haseł wyborczych (infobox, kategorie, liczby)
+- `references/international-sogi-sources.md` — źródła internacionalne (UN, OAS, ACHPR, Yogyakarta)
+- `references/spaceforest-themis-research.md` — case study research projektu kosmicznego (TEN-E/ESA)
+- `scripts/verify_pl_wiki_article.py` — automatyczny render serwerowy + raport czerwonych linków (uruchamiany: `python3 scripts/verify_pl_wiki_article.py Plik.wiki`)
