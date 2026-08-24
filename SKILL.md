@@ -33,6 +33,15 @@ Tworzenie, edytowanie i formatowanie artykułów na polskiej Wikipedii. Konwencj
 - Praca przez pliki zapewnia wersjonowanie i możliwość review przed publikacją
 - Spójność z istniejącym workflow (wszystkie artykuły w `wiki/` są plikami lokalnymi)
 
+### Jedno hasło = jeden plik (single source of truth)
+
+**Jedno hasło = dokładnie jeden plik roboczy `.wiki` w `wiki/`** (nazwa pliku = tytuł hasła, spacje → `_`). NIE twórz wielu kopii tego samego artykułu (np. `X.aktualna`, `X.propozycja`, `X.v2`, `X.backup`, `X_poprawiony`). Wielokrotne kopie prowadzą do rozjazdu wersji i pomyłek przy publikacji.
+
+- **Synchronizacja przed edycją:** zawsze pobieraj **najnowszą żywą wersję** artykułu przez API (`action=parse&page=<Tytuł>&prop=wikitext&format=json`) i NADPISUJ nią ten jedyny plik roboczy. Następnie wprowadzaj zmiany w tym samym pliku.
+- **Porównywanie / „przed i po”:** używaj `git diff` na jednym pliku albo odnotuj zamierzone zmiany komentarzem w tekście roboczym – zamiast tworzyć osobne kopie.
+- **Sprzątanie:** po scaleniu usuń wszelkie kopie i pliki tymczasowe (`_tmp`, `aktualna`, `propozycja`), zostawiając wyłącznie plik kanoniczny.
+- **Publikacja:** treść do ręcznego wklejenia bierz WYŁĄCZNIE z pliku kanonicznego.
+
 ## Struktura artykułu
 
 ### Kolejność sekcji
