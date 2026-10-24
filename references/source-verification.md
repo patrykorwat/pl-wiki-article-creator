@@ -85,6 +85,16 @@ Nie potwierdzał natomiast: konkretnych liczb uczestników dla lat 1997–2015, 
 - Autor — zgodny z metadanymi
 - URL — działający (HTTP 200)
 
+### Techniki dostępu, gdy treść jest trudna do wyciągnięcia
+
+- **Artykuł naukowy za paywallem** → zweryfikuj metadane przez Crossref: `curl -sL https://api.crossref.org/works/<DOI>`. Potwierdza tytuł, autorów, datę, strony, ISSN. Metadane NIE potwierdzają treści — sam artykuł pozostaje niedostępny, więc nie cytuj tez, których nie przeczytałeś.
+- **Artykuł prasowy, który wraca pustym/JS-owym body** (np. spiegel.de) → `curl` z normalnym UA, potem w Pythonie usuń `<script>...</script>` i tagi HTML, a następnie wyszukaj frazy-klucze w tekście. Dopiero widoczne zdania liczą się jako przeczytane.
+- **Stare artykuły prasowe, których żywy URL znika** → web.archive.org (`https://web.archive.org/web/<rok>/<url>`); archiwum jest czytelne, gdy curl zwraca pełny HTML. Preferuj żywy URL w przypisie, archiwum jako `archiwum=`.
+- **Cytat, które krąży wyłącznie w publikacjach strony zainteresowanej** (stowarzyszenia wypędzonych, portale ideologiczne, fandomy, RT) → to NIE jest źródło encyklopedyczne, nawet jeśli cytat bywa powtarzany w mediach głównego nurtu. Można o nim wspomnieć jako o twierdzeniu danej strony (z atrybucją), ale nie dokumentować go jako faktu.
+- **Wikipedia w innej wersji językowej** → traktuj wyłącznie jako indeks tropów: jej przypisy prowadzą do źródeł pierwotnych, które samemu trzeba otworzyć i przeczytać. Sam artykuł wiki nigdy nie jest cytowany.
+- **ISBN** → przy braku dostępu do Open Library zweryfikuj cyfrę kontrolną ISBN-13 programowo (suma ważona 1/3, modulo 10); poprawna suma dowodzi poprawności wpisu, nie istnienia treści.
+- **Data publikacji niewidoczna w body** → wydobądź z metadanych HTML-a, nie zgaduj jej: `curl -sL URL -H "User-Agent: Mozilla/5.0" | grep -oE '<time[^>]*datetime="[^"]+"'` albo `"datePublished"` w JSON-LD. Uwaga: strona zawiera zwykle kilka tagów `<time>` (tasiemka „powiązane aktualności", sidebar) — weź ten z nagłówka/stopki artykułu, a w razie wątpliwości skoryguj o datkę widoczną w tekście lub slug URL-a. Data trafia do `data=` w {{cytuj}}.
+
 ### Krok 5: Pytanie kontrolne
 
 „Czy gdyby ktoś kliknął w ten link, znalazłby dokładnie to, do czego go przypisałem?"

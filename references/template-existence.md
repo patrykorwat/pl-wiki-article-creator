@@ -26,6 +26,8 @@ Idź do `https://pl.wikipedia.org/wiki/Szablon:Nazwa_szablonu` i zobacz, czy str
 | `{{SORTUJ:Nazwisko, Imię}}` | Sortowanie kategorii dla biogramów |
 | `{{Kontrola autorytatywna}}` | Kontrola autorytatywna (VIAF, LCCN itp.) |
 | `{{link-interwiki|Hasło|Q=Qxxxxx|tekst=...}}` | Link do hasła, które nie istnieje na pl.wiki |
+| `{{Uwagi}}` | Sekcja „Uwagi” (grupa przypisów `<ref group="uwaga">`) |
+| `{{Odsłuchaj|plik=...|tytuł=...}}` | Odtwarzacz pliku audio (np. w „Zobacz też”) |
 
 ## NIE istnieją (pomimo pozoru z en.wiki)
 
@@ -40,6 +42,7 @@ Idź do `https://pl.wikipedia.org/wiki/Szablon:Nazwa_szablonu` i zobacz, czy str
 | `{{Przypisy źródłowe}}` | Użyj `{{Przypisy}}` |
 | `{{R}}` (skrócony przypis) | Użyj `<ref name="x" />` |
 | `{{Cytuj}}` (z dużej) | Użyj `{{cytuj}}` (z małej) |
+| `{{Wayback}}` | Nie istnieje; archiwizację podaj w `{{cytuj}}` (`archiwum=`, `zarchiwizowano=`), a w „Linkach zewnętrznych” linkuj snapshot Wayback bezpośrednio |
 
 ## Zasada: zweryfikuj, zanim użyjesz
 

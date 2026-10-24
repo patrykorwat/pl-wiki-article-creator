@@ -9,7 +9,10 @@ Checks:
   2. Every <ref name="X" /> shorthand has a defining <ref name="X">...</ref> earlier
      (also for group="uwaga" notes used with {{Uwagi}}).
   3. Every [[wikilink]] resolves to an existing pl.wiki article (case-safe lookup).
-  4. Every {{link-interwiki|...|Q=Q...}} QID resolves on Wikidata (throttled ~1.2 s/req).
+  4. Every {{link-interwiki|...|Q=Q...}} QID resolves on Wikidata (throttled ~1.2 s/req);
+     BAD = entity missing OR has a plwiki sitelink (then use a normal [[link]] instead);
+     an API failure after retries is reported as UNKNOWN, never counted as BAD (flaky
+     Wikidata calls must not flag valid QIDs).
   5. Every [[Plik:...]] / [[File:...]] exists on Wikimedia Commons.
   6. AUTHORITATIVE server-side render (action=parse, POST text= with the full wikitext):
        - no template errors ("Nieznane pola", "Nieznany parametr", "Błąd w przypisach", ...)
@@ -78,7 +81,7 @@ def ref_integrity(text):
 def wikilinks(text):
     links = set()
     for m in re.finditer(r"\[\[([^\[\]\n]+?)\]\]", text):
-        target = m.group(1).split("|")[0].strip()
+        target = m.group(1).split("|")[0].split("#")[0].strip()  # obetnij fragment #sekcji — API daje fałszywy MISS dla tytułu z #, choć strona istnieje (np. [[Supersamochód#Hipersamochód|...]])
         if target.startswith(("Plik:", "File:", "Kategoria:", "Kategoria ", "#")) or not target:
             continue
         links.add(target)
@@ -117,24 +120,31 @@ def check_wikilinks(links):
 
 
 def link_interwiki_qids(text):
-    return sorted(set(re.findall(r"\{\{link-interwiki[^}]*?\|\s*Q=Q(\d+)\s*\}\}", text)))
+    return sorted(set(re.findall(r"(?i)\{\{link-interwiki[^}]*?\|\s*Q=Q(\d+)\s*\}\}", text)))
 
 
 def check_qids(qids):
+    """BAD = entity missing OR has a plwiki sitelink (use [[link]] instead of interwiki).
+    API failure after retries -> UNKNOWN (reported separately, never counted as BAD):
+    a flaky/rate-limited wbgetentities call must not flag a valid QID as broken."""
     bad = []
+    unknown = []
     for q in qids:
         params = {
             "action": "wbgetentities",
             "ids": "Q" + q,
-            "props": "labels",
+            "props": "labels|sitelinks",
             "languages": "en",
             "format": "json",
         }
         d = api(WD + "?" + urllib.parse.urlencode(params))
-        if not d or not d.get("entities", {}).get("Q" + q):
+        ent = (d or {}).get("entities", {}).get("Q" + q)
+        if ent is None:
+            unknown.append("Q" + q)
+        elif ent.get("missing") is not None or "plwiki" in ent.get("sitelinks", {}):
             bad.append("Q" + q)
         time.sleep(1.2)
-    return bad
+    return bad, unknown
 
 
 def plik_files(text):
@@ -211,10 +221,13 @@ def main():
     print(f"wikilinks checked: {len(links)} | MISSING: {sorted(mm) or '-'}")
 
     qids = link_interwiki_qids(text)
-    badq = check_qids(qids)
+    badq, unkq = check_qids(qids)
     if badq:
         problems.append(f"{len(badq)} bad link-interwiki QIDs")
-    print(f"link-interwiki QIDs checked: {len(qids)} | BAD: {sorted(badq) or '-'}")
+    print(
+        f"link-interwiki QIDs checked: {len(qids)} | BAD: {sorted(badq) or '-'}"
+        f" | UNKNOWN (API flake, verify by hand): {sorted(unkq) or '-'}"
+    )
 
     files = plik_files(text)
     mf = check_commons(files)
@@ -228,7 +241,7 @@ def main():
     if errors:
         problems.append("render template errors")
     print("template errors:", errors or "-")
-    iw_targets = {t for t in re.findall(r"\{\{link-interwiki\|([^|}]+)\|", text)}
+    iw_targets = {t for t in re.findall(r"(?i)\{\{link-interwiki\|([^|}]+)\|", text)}
     suspicious = [r for r in reds if r not in iw_targets]
     if suspicious:
         problems.append(f"{len(suspicious)} suspicious red links")
