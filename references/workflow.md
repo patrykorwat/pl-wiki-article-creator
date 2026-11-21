@@ -22,6 +22,8 @@
 Kolejność kroków, zanim cokolwiek napiszesz:
 
 1. **Synchronizacja:** pobierz żywą wersję `action=parse&page=<Tytuł>&prop=wikitext&format=json`, NADPISUJ nią plik kanoniczny w `wiki/`. Nie edytuj starej lokalnej kopii.
+
+Uwaga narzędziowa: `write_file` odmawia nadpisu pliku, który był czytany stronicowo (read_file z limitami — per-line truncation nie liczy się jako pełny odczyt, blokada nie znika). Obejście: zapisz nową treść przez write_file do pliku w podkatalogu `.tmp/`, potem atomowo `mv` na plik kanoniczny.
 2. **Sprawdź historię zmian** przed dalszą pracą: `action=query&prop=revisions&titles=...&rvprop=timestamp|user|comment|size`. Między lokalną kopią a wersją żywą mogły wejść obce edycje (boty usuwające `link-interwiki`, poprawki interpunkcji) — dzięki temu nie odtworzysz ich przypadkiem w swojej wersji, a cudzych zmian nie uznasz za własne.
 3. **Przeczytaj dostarczone źródło w całości**, potem **skrzyżuj tezę w co najmniej jednym źródłem niezależnym** (agregator i komunikat prasowy to jedno źródło powtarzane, nie dwa). Dodawaj tylko fakty zapisane w źródłach, które otworzyłeś.
 4. **Nie przenoś mechaniki transakcji z PR-u jednej strony** (kwoty opcji wyjścia, pakiety akcji, warunki put/call), jeśli nie ma ich w źródle niezależnym i nie prosi o nie użytkownik. Zostaw je na żądanie.
@@ -33,7 +35,7 @@ Kolejność kroków, zanim cokolwiek napiszesz:
 
 - **Nie fetchuj zwykłego URL artykułu** (renderowana strona): przy wersjach niełacińskich (zh, ja, ko, ru) ekstrakcja potrafi zwrócić wyłącznie nawigację/menu zamiast treści.
 - **Pobierz surowy wikitekst przez `action=raw`**: `web_extract` na `https://<lang>.wikipedia.org/w/index.php?title=<Tytuł_URL-encoded>&action=raw` — zwraca cały wikitekst z przypisami w jednym kawałku; zapisz do pliku w scratch i czytaj stronicowanie.
-- **Przypisy oryginału są gotowym materiałem źródłowym.** Zamiast szukać nowych źródeł dla przetłumaczonych tez, przenieś URL/wydawcę/datę/język z przypisów oryginału do formatu pl.wiki (inline refs, patrz 3.1). Zachowaj `data dostępu` z oryginału lub własną bieżącą datę po sprawdzeniu, że link żyje.
+- **Przypisy oryginału są gotowym materiałem źródłowym.** Zamiast szukać nowych źródeł dla przetłumaczonych tez, przenieś URL/wydawcę/datę/język z przypisów oryginału do formatu pl.wiki (inline refs, patrz references/przypisy-cytowanie.md §3.1). Zachowaj `data dostępu` z oryginału lub własną bieżącą datę po sprawdzeniu, że link żyje.
 - Tytuły źródeł w alfabetach niełacińskich (chińskie, rosyjskie, japońskie) zostawiaj w oryginale w przypisie — to normalna praktyka na pl.wiki.
 
 ## Gap-analysis klastra artykułów („co jeszcze brakuje na pl.wiki”)
@@ -46,6 +48,24 @@ Gdy projekt obejmuje kilka haseł wokół jednej tezy/strategii, a user pyta „
 4. **Plan z historii sesji:** przeszukaj przeszłe sesje (session_search / state.db po wzmiankach o projekcie) — plan działania z tamtej rozmowy daje listę kandydatów na hasła. KAŻDY kandydat zweryfikuj u żywego źródła zanim go zaproponujesz — zasady higieny źródeł obowiązują też dla propozycji, nie tylko gotowych przypisów.
 5. **Kolejność wg twardych terminów:** hasło z datą graniczną (wejście w życie aktu, deadline przetargu) przed hasłem „kiedyś”; terminy podaj userowi w tabeli.
 6. **Follow-upy linkowe:** po publikacji nowego hasła w klastrze hasła-sąsiedzi, które wspomniały temat gołym tekstem, stają się kandydatami do wikilinka — dopisuj przy następnej edycji danego hasła, nie w spinanej serii.
+
+## Synchronizacja repo skilla z GitHubem
+
+Katalog skilla (`/opt/data/skills/<kategoria>/<skill>/`) jest gitem z remote `patrykorwat/*`. Gdy użytkownik prosi o „commit i push” skilla, prowadź to jak zwykłe repo wg procedury `github-commit-push`: test auth `ssh -i /opt/data/workspace/.ssh/id_ecdsa -o IdentitiesOnly=yes -T git@github.com`, sekret-skan na `git diff --cached` (nie na całym katalogu), commit z krótkim opisem, push `GIT_SSH_COMMAND="ssh -i /opt/data/workspace/.ssh/id_ecdsa -o IdentitiesOnly=yes" git push origin main`, weryfikacja że `git rev-parse origin/main HEAD` wskazują ten sam commit. Treść edytuj najpierw przez skill_manage, a dopiero potem publikuj w gicie. SKILL.md trzymaj jako kompaktowy router (zasady zawsze-obowiązujące w całości + tabela „Routing po zadaniu” + pełny indeks): nową treść kieruj do właściwego pliku tematycznego w `references/` — nowy plik zakładaj tylko, gdy żaden istniejący temat nie pasuje — i zawsze dopisz go do indeksu w SKILL.md, bo plik nieobecny w indeksie jest martwy. Gdy którykolwiek plik znowu przerośnie, zastosuj przepis podziału niżej.
+
+## Reorganizacja: podział przerośniętego pliku na references/
+
+1. Zaplanuj pliki z mapy nagłówków i liczby linii (`grep -n "^#\{1,3\} "` + `wc -l`); każdy nowy plik = jeden spójny zakres tematyczny.
+2. Treść wycinaj skryptem per zakres linii (`'\n'.join(lines[a-1:b])` po pełnym odczycie), nie parafrazą — reguły w skillu są destylatem realnych wpadek, a parafraza gubi kwalifikatory, za które zapłacono błędem.
+3. Transformacje (podniesienie poziomu nagłówka, przepisanie wskaźnika) wykonuj jako jawne `.replace()`, a weryfikuj asercją `transformacja(slice) in zapisany_plik` — asercja na surowym wycinku daje fałszywe alarmy, bo przetransformowany nagłówek nie pasuje do wzorca.
+4. Numerację sekcji (3.1–3.9), na którą chodzą odwołania z innych plików, zachowaj w nowym pliku i odnotuj to w jego nagłówku; pozostałe martwe wskaźniki znajdź greppem `references/` po odwołaniach do SKILL.md i przepisz na nowe ścieżki.
+5. SKILL.md zapisz od nowa jako router i zamknij pętlę: `skill_view` potwierdza linked_files, każda ścieżka w indeksie istnieje na dysku, `git status` daje userowi podsumowanie zmian.
+
+## Skracanie na żądanie („o X%”)
+
+1. Mierz prozę, nie plik: usuń szablony i refy regexem, licz znaki i przelicz cel z wartości wyjściowej; w meldunku podaj obie liczby (proza i cały plik).
+2. Tnij najpierw powtórzenia między sekcjami, potem zagęszczaj zdania; wszystkie liczby, wikilinki i definicje refów zostają.
+3. **Zatrzymaj się, gdy dalej trzeba usuwać fakty merytoryczne.** Zamelduj osiągnięty procent, wymień po nazwie fakty pozostałe do wycięcia i zostaw decyzję użytkownikowi — nie tnij sam.
 
 ## Narzędzia
 - `web_search` — znajdź źródła

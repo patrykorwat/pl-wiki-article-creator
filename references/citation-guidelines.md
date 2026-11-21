@@ -13,6 +13,9 @@ Dobry przypis ma:
 
 Pola `{{cytuj}}`: `autor` (nie `nazwisko`/`imię`), `data` (nie `rok`), `s` (nie `strony`). Kolaboracje jako `autor="Nazwa zespołu"`, bez „i in.".
 
+## Gazety w polu `czasopismo=` → ukryta kategoria
+`czasopismo = Washington Post` wyzwala kategorię „Szablon cytowania zamienił nazwę czasopisma": Moduł:Cytuj podmienia wartość, gdy pasuje do tabeli w Moduł:Cytuj/czasopisma (kategoria = `altJournal` w Moduł:Cytuj/dane — szukaj frazy kategorii tam, nie w Szablon:Cytuj, który jest 2,5-kilobajtowym wrapperem). Dla prasy używaj `opublikowany=`; `czasopismo=` zarezerwowane dla czasopism naukowych. Po naprawie potwierdź zniknięcie kategorii render-checkiem (expandtemplates całego pliku).
+
 Źródła pierwotne tylko do faktów rutynowych. Encyklopedyczność i oceny opieraj na niezależnym, wtórnym pokryciu.
 
 ## Słabe wzorce cytowań

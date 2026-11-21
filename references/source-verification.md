@@ -59,6 +59,8 @@ Najczęstszy zarzut wobec edytorów Wikipedii to **przypisy, które nie potwierd
 
 To najważniejszy i najczęściej pomijany krok.
 
+**Weryfikacja książek w pełnych PDF-ach (sprawdzone, październik 2026 — hasło Struktura danych):** gdy książka krąży w sieci jako pełny PDF (domeny uczelni, archive.org), przepuść ją przez `web_extract` — przy dużym pliku pełny tekst ląduje na dysku (ścieżka w stopce wyniku), po czym grepuj dokładne zdanie/wzorzec tezy w zapisanym pliku. Uwaga na artefakty OCR: wzorce matematyczne pisz OCR-tolerancyjnie (`O(1)` → `O\.1/`, `Θ(n)` → `‚\.n/`, `O(h)` → `O\.h/`). Trafienie w zdanie wprost w źródle spełnia Zasadę 2 dla tezy z książki; cytuj na poziomie rozdziału/paragrafu, bez numeru strony, jeśli paginacja nie jest widoczna w ekstrakcie. Jeśli pełnego PDF-u nie ma (np. K&R), nie cytuj tezy na tej książce — przenieś ją na źródło otwarte (np. OpenDSA).
+
 - Przeczytaj źródło (lub tyle, ile jest dostępne)
 - Znajdź KONKRETNE ZDANIE potwierdzające tezę
 - Jeśli nie znajdujesz — TEZA NIE JEST UDOKUMENTOWANA. Nie dodawaj przypisu.
@@ -94,12 +96,19 @@ Nie potwierdzał natomiast: konkretnych liczb uczestników dla lat 1997–2015, 
 - **Wikipedia w innej wersji językowej** → traktuj wyłącznie jako indeks tropów: jej przypisy prowadzą do źródeł pierwotnych, które samemu trzeba otworzyć i przeczytać. Sam artykuł wiki nigdy nie jest cytowany.
 - **ISBN** → przy braku dostępu do Open Library zweryfikuj cyfrę kontrolną ISBN-13 programowo (suma ważona 1/3, modulo 10); poprawna suma dowodzi poprawności wpisu, nie istnienia treści.
 - **Data publikacji niewidoczna w body** → wydobądź z metadanych HTML-a, nie zgaduj jej: `curl -sL URL -H "User-Agent: Mozilla/5.0" | grep -oE '<time[^>]*datetime="[^"]+"'` albo `"datePublished"` w JSON-LD. Uwaga: strona zawiera zwykle kilka tagów `<time>` (tasiemka „powiązane aktualności", sidebar) — weź ten z nagłówka/stopki artykułu, a w razie wątpliwości skoryguj o datkę widoczną w tekście lub slug URL-a. Data trafia do `data=` w {{cytuj}}.
+- **EUR-Lex stawia AWS WAF na curla bez względu na czekanie** (zamiast treści — kilka KB skryptu z `awsWafCookieDomainList` i `gokuProps`). Nie iteruj z czekaniem: otwórz `https://eur-lex.europa.eu/legal-content/<JĘZYK>/TXT/HTML/?uri=CELEX:<id>` w przeglądarce i czytaj `document.body.innerText`; ścieżka daje pełny tekst aktu także wtedy, gdy curl nie przechodzi nigdy.
+- **Dokumenty Consilium pobieraj jako PDF z data.consilium.europa.eu** (`/doc/document/<REF>/pdf`, ST-/CM-/COM-) — curlem i greppowalne przez pymupdf; HTML z www.consilium.europa.eu zwraca 403. To właściwa ścieżka dla redlin, mandatów negocjacyjnych i ocen skutków.
+- **pymupdf uruchamiaj interpreterem venv projektu (`wiki/.venv/bin/python`)** — domyślny interpreter jądra potrafi nie mieć modułu. PDF-y instytucjonalne (mandaty ST-, fiche rządowe, raporty eksperckie) po pobraniu greppuj pod kluczowe frazy zamiast polegać na trackerach i blogach.
 
 ### Krok 5: Pytanie kontrolne
 
 „Czy gdyby ktoś kliknął w ten link, znalazłby dokładnie to, do czego go przypisałem?"
 
 Jeśli odpowiedź brzmi „nie", „nie wiem" lub „może" — nie dodawaj przypisu.
+
+## Stanowiska instytucji — zawsze z aktu pierwotnego
+
+Tezę o tym, CO instytucja uznała/postulowała, weryfikuj w akcie pierwotnym (EUR-Lex), nie w relacjach prasowych — nawet kilka zgodnych opracowań wtórnych potrafi odwrócić sens (zamienić „instrument właściwy, X dopuszczalny jako alternatywa” na „preferencja dla X”). Weryfikacja recenzji to naturalny moment, by taką tezę podnieść z aktu — pełny tekst przez przeglądarkę albo greppowalny PDF, nie press release ani serwis typu tracker.
 
 ## Przykład porażki (Stepan Rudnycki — lipiec 2026)
 

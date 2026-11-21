@@ -16,8 +16,8 @@ w Rosji w 2026 roku” (sierpień 2026). Nazwa wzorcowa: `Wybory parlamentarne <
    terminologia (np. Jedna Rosja, Duma Państwowa Federacji Rosyjskiej, Giennadij Ziuganow),
    sposób użycia infoboxu, wzorzec kategorii.
 4. **Zweryfikuj hasła do linkowania batchem** (`action=query&titles=a|b|c&redirects=1`,
-   40–50 tytułów/zapytanie) — ale NIE ufaj batchowi bez render-check (patrz pitfall o wielkiej
-   literze w SKILL.md).
+   40–50 tytułów/zapytanie) — ale NIE ufaj batchowi bez render-check (patrz pitfall o normalizacji
+   wielkości liter w references/linki-i-grafiki.md).
 5. **Autorytatywna weryfikacja**: render serwerowy pełnego pliku (`action=parse`, POST `text=`)
    i skan HTMLa za `redlink=1` oraz błędy szablonów. Zautomatyzowane: `scripts/verify_pl_wiki_article.py`.
    Render łapie czerwone linki, których batch nie widzi, ORAZ podpowiada, że jakieś hasło ma już

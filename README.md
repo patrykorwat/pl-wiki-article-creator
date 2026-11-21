@@ -15,18 +15,15 @@ Pokrywa cały cykl pracy nad artykułem:
 
 ## Struktura
 
+Od v1.6.0 SKILL.md jest kompaktowym routerem (zasady nadrzędne + indeks), a szczegółowa dokumentacja leży w plikach referencyjnych:
+
 ```
-SKILL.md                                  # instrukcja główna
-references/                               # wytyczne szczegółowe
-  checklist.md
-  citation-guidelines.md
-  template-existence.md
-  przedsiebiorstwo-infobox.md
-  source-verification.md
-  source-verification-case-study.md
-  section-rewriting-case-study.md
-  wikidata-description.md
-  workflow.md
+SKILL.md         # zasady nadrzędne, routing po zadaniu, pełny indeks
+references/      # 42 pliki szczegółowe: workflow i typy zadań, adaptacja/tłumaczenia,
+                 # przypisy i źródła, infoboksy i szablony, język i NPOV,
+                 # kontrola jakości, linki/Wikidaty/grafiki
+scripts/         # verify_pl_wiki_article.py (render serwerowy + czerwone linki),
+                 # verify_render.py (weryfikacja pliku .wiki przed publikacją)
 ```
 
 ## Zasady kluczowe

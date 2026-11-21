@@ -56,3 +56,17 @@ Przed napisaniem batcha „fix" (usuń X, dodaj Y) pobierz aktualne twierdzenia 
 Zanim utworzysz encję, sprawdź przez `action=wbgetentities&sites=plwiki&titles=<Tytuł>&languages=pl|en|de|fr|cs&format=json`, czy artykuł ma już `wikibase_item`; dodatkowo przeszukaj Wikidata po nazwie (wbsearchentities) w kilku językach — encja mogła powstać niezależnie bez sitelinka pl.
 
 Ta sama weryfikacja dotyczy STARYCH batchów: `.qs` leżący w workspace może być już odpalony (encja istnieje z sitelinkiem pl) albo nieaktualny wobec stanu żywego — przed każdym odpaleniem porównaj każdy CREATE-batch z `wbgetclaims`/`wbgetentities` i usuń przestarzały plik, zamiast go regenerować. Odpowiedź `wbgetentities` z `sites=`/`titles=` zwraca dla nieistniejących tytułów klucze-placeholdery (`-1`, `-Q...`) — filtruj klucze zaczynające się od `-`, inaczej pusty wynik odczytasz jako „brak encji” albo odwrotnie.
+
+## Nowy artykuł na istniejącej encji — batch sitelinków dostarczany z draftem, odpalany PO publikacji
+
+Gdy temat ma już encję (najczęściej przez en.wiki: `prop=pageprops` → `wikibase_item`, potem kontrola `wbgetentities`), NIE twórz nowej — przygotuj mały fix-batch dodający do istniejącej encji sitelink plwiki, etykietę `Lpl` i opis `Dpl`, każde z refem S854 na publikowany artykuł i S813 na datę dostępu:
+
+```
+Q4632853|plwiki|"EU Inc."|S854|"https://pl.wikipedia.org/wiki/EU_Inc."|S813|+2026-11-19T00:00:00Z/11
+Q4632853|Lpl|"EU Inc."|S854|"https://pl.wikipedia.org/wiki/EU_Inc."|S813|+2026-11-19T00:00:00Z/11
+Q4632853|Dpl|"projektowana ponadnarodowa forma spółki dla innowacyjnych przedsiębiorstw w UE"|S854|"https://pl.wikipedia.org/wiki/EU_Inc."|S813|+2026-11-19T00:00:00Z/11
+```
+
+- Konkretne QID zamiast `LAST` — encja istnieje, więc nie ma `CREATE` ani problemu z rozwiązaniem LAST.
+- Sitelink plwiki jest poprawny dopiero po publikacji hasła — dostarczaj batch razem z draftem z wyraźną instrukcją „odpać po publikacji”; odpalany przed publikacją wygeneruje błąd (sitelink na nieistniejącą stronę).
+- `Dpl` pisz według reguł opisów (rzeczownikowy fragment, 5–12 słów, mała litera, bez kropki); plik `.qs` nazywaj po haśle (`<Hasło>.qs`), nie po sesji.
