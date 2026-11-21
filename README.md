@@ -19,7 +19,7 @@ Od v1.6.0 SKILL.md jest kompaktowym routerem (zasady nadrzędne + indeks), a szc
 
 ```
 SKILL.md         # zasady nadrzędne, routing po zadaniu, pełny indeks
-references/      # 42 pliki szczegółowe: workflow i typy zadań, adaptacja/tłumaczenia,
+references/      # 43 pliki szczegółowe: workflow i typy zadań, adaptacja/tłumaczenia,
                  # przypisy i źródła, infoboksy i szablony, język i NPOV,
                  # kontrola jakości, linki/Wikidaty/grafiki
 scripts/         # verify_pl_wiki_article.py (render serwerowy + czerwone linki),

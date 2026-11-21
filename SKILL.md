@@ -114,6 +114,7 @@ Nie dodawaj {{Dopracować|pov}}, {{fakt}}, {{przez kogo}} itp. bez wyraźnej pro
 - `poprawki-i-skracanie.md` — redakcja z gotowego tekstu usera + skracanie z celem %
 - `pl-en-mirror-sync.md` — synchronizacja PL z własnym draftem EN (obie wersje istnieją)
 - `strategia-baza-maintenance.md` — utrzymanie bazy strategicznej: sekcje B z wywiadów/podcastów, MEMO-ONLY, rejestr Sxx, timestampy ASR, gap-check pl.wiki
+- `pl-wiki-spinoff-hasla.md` — decyzja osobne hasło vs rozbudowa sekcji, tytuł i plan integracji przy wyciąganiu tematu z hasła nadrzędnego
 - `czy-wiesz-questions.md` — pełny zestaw reguł i przykłady pytań do „Czy wiesz”
 
 ### Adaptacja i tłumaczenia
